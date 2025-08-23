@@ -1,0 +1,31 @@
+Comandos - C++ 
+
+Passo a Passo
+
+cd pasta - adicionar o caminho da pasta q vc vai trabalhar 
+git init 
+git config --global user.mail "seu@gmail.com"
+git config --global user.name "seunome"
+git status - oq aparecer em erro deve ser adicionado
+git add arquivodoerro ex: git add helloworld.exe, git add helloworld.cpp
+
+
+git commit -m "nomedocommit" - salvar as atualizações no seu repositório
+
+
+git branch - verificar seus branchs
+
+são 2, master* e main*
+se aparecer o master
+
+git push -u origin master
+
+
+
+se quiser criar o branch main-
+
+git checkout -b main
+git push -u origin main
+
+
+git add arquivo , server p adicionar os arquivos dentro da pasta que você está mexendo no terminal, no seu repositório
