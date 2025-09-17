@@ -17,14 +17,15 @@ git branch - verificar seus branchs
 
 são 2, master* e main*
 se aparecer o master
+master é o default
 
-git push -u origin master
 
 
 
 se quiser criar o branch main-
 
-git checkout -b main
+git checkout -b main - cria o branch e já troca p ele
+git checkout main - troca p branch main
 git push -u origin main
 
 
