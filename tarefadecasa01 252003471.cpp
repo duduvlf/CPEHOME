@@ -1,31 +1,31 @@
 #include <iostream>
 #include <stdlib.h>
-
+// EDUARDO AUGUSTO - RA 252003471 - TAREFA DE CASA 01
 using namespace std;
 
 int main() {    
 
     // Exercício 01 
-    int numeros1, numeros2, numeros3, numeros4, numeros5; { // criei 5 variáveis inteiras
+    int numeros[5]; // criei 5 variáveis inteiras
 
     cout << "digite 5 números inteiros entre 0 a 25 (0=A, 25=Z): " << endl; //mostra a mensagem na tela
-    cin >> numeros1 >> numeros2 >> numeros3 >> numeros4 >> numeros5; // aqui o usuário digita os números
-
-if ( numeros1 < 0 || numeros1 > 25 || numeros2 < 0 || numeros2 > 25 || numeros3 < 0 || numeros3 > 25 || numeros4 < 0 || numeros4 > 25 || numeros5 < 0 || numeros5 > 25 ) { // condição para verificar se os números estão entre 0 e 25
+   for ( int i = 0; i < 5; i++ ) { // laço de repetição para ler os 5 números
+   cin >> numeros[i]; // aqui o usuário digita os números
+   }
+for ( int i = 0; i < 5; i++ ) {
+if ( numeros[i] < 0 || numeros[i] > 25 )  { 
   cout << "número inválido" << endl;
   system("pause");
-  return 1; // aqui o programa termina com erro, pois foi digitado um número dentro das condições
-} else { // se os números estiverem dentro das condições, o programa continua
-    cout << "as letras correspondentes são: ";
-cout << char(('A' + numeros1)) << ","
-     << char(('A' + numeros2))<< ","
-     << char(('A' + numeros3)) << ","
-     << char(('A' + numeros4)) << ","
-     << char(('A' + numeros5))  << endl; // utilizar o char para converter o número em caractere 
-     // 'A' + numero converte o número em letra (0=A, 1=B, 2=C, ..., 25=Z)
-     // 'A' é o valor ASCII da letra A, que é 65 e deixa o valor do número entre 0 e 25
-     }
+  return 1; 
 }
+} 
+ cout << "As letras correspondentes são: ";
+    for (int i = 0; i < 5; i++) {
+        cout << char('A' + numeros[i]);
+        if (i < 4) cout << ", ";
+    }
+    cout << endl;
+     
 // Exercício 02
 char letra1, letra2, letra3, letra4, letra5; { // criei 5 variáveis do tipo char para armazenar as letras
 int deslocamento; {
