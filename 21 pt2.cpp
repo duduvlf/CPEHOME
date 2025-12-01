@@ -2,19 +2,12 @@
 #include <cstdlib>
 #include <ctime>  
 #include <algorithm> 
-#include <string>
 
 using namespace std;
 
-struct Carta {
-    string nome;  
-    string naipe;  
-    int valor;    
-};
-
-void imprimirBaralho(Carta deck[], int tamanho) {
+void imprimirBaralho(int deck[], int tamanho) {
     for (int i = 0; i < tamanho; i++) {
-        cout << "[" << deck[i].nome << "--" << deck[i].naipe << "]";
+        cout << deck[i] << " ";
         if ((i + 1) % 13 == 0) {
             cout << endl;
         }
@@ -22,7 +15,7 @@ void imprimirBaralho(Carta deck[], int tamanho) {
     cout << endl;
 }
 
-void embaralhar(Carta deck[], int tamanho) {
+void embaralhar(int deck[], int tamanho) {
     for (int i = 0; i < 1000; i++) {
         int pos1 = rand() % tamanho; 
         int pos2 = rand() % tamanho; 
@@ -30,44 +23,40 @@ void embaralhar(Carta deck[], int tamanho) {
     }
 }
 
-// CORREÇÃO: Removi as variáveis globais daqui!
+int opcao = 0;
 
 int main() { 
+    bool estorou = false;
     srand(time(NULL));
-    
-    // CORREÇÃO: Movi elas para cá (Variáveis Locais)
-    int opcao = 0;
+
+    int baralho[52];
     int indice = 0; 
-    
-    Carta baralho[52];
-    
-    string naipes[] = {"Ouros", "Espadas", "Copas", "Paus"};
-    string nomes[]  = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Valete", "Dama", "Rei", "As"};
-    int valores[]   = { 2,   3,   4,   5,   6,   7,   8,   9,   10,    10,     10,    10,    11 };
-    
+
     cout << "Criando um baralho de 52 cartas..." << endl;
     system("pause");
-    
-    for (int n = 0; n < 4; n++) { 
-        for (int v = 0; v < 13; v++) { 
-            baralho[indice].naipe = naipes[n];
-            baralho[indice].nome = nomes[v]; 
-            baralho[indice].valor = valores[v];
+
+    for (int naipe = 0; naipe < 4; naipe++) {
+        for (int valor = 2; valor <= 10; valor++) {
+            baralho[indice] = valor;
             indice++; 
         }
+        baralho[indice++] = 10; 
+        baralho[indice++] = 10; 
+        baralho[indice++] = 10; 
+        baralho[indice++] = 11;
     }
+
     cout << "---Baralho---" << endl;
-    imprimirBaralho(baralho, 52);                                     
+    imprimirBaralho(baralho, 52);                                      // Tem que fazer com A valendo 1 também
     system("pause");
-    
+
     cout << "Embaralhando..." << endl;
     embaralhar(baralho, 52);
     cout << "--- Baralho Embaralhado ---" << endl;
     system("pause");
-    
     while (true) {
         embaralhar(baralho, 52);
-        
+        indice = 0; 
         cout << "---------------------------------" << endl;
         cout << "Bem Vindo ao Blackjack!" << endl;
         cout << " 1- Jogar" << endl;
@@ -78,35 +67,28 @@ int main() {
         
         switch (opcao) {
             
-            case 1: { 
+            case 1: { // Abri chave aqui para isolar as variáveis do jogo
                 
-                bool estorou = false;
                 cout << "Iniciando o jogo..." << endl;
                 int soma = 0;
                 int numdeAses = 0;
                 int numdeAsesDeeler = 0;
-                
-                indice = 0; // Reseta o índice para o começo do baralho
-                
-                Carta carta1 = baralho[indice];
+                int carta1 = baralho[indice];
                 indice++;
-                
                 system("pause");
                 system ("cls");
                 cout << "---------------------------------" << endl;
-                cout << "Sua primeira carta: " << carta1.nome << " de " << carta1.naipe << endl;
-                if (carta1.valor == 11) {
-                    numdeAses++;
-                }
-                soma += carta1.valor;
+                cout << "Sua primeira carta: " << carta1 << endl;
+                if (carta1 == 11) {
+                numdeAses++;}
+                soma += carta1;
                 
-                Carta carta2 = baralho[indice];
+                int carta2 = baralho[indice];
                 indice++;
-                cout << "Sua segunda carta: " << carta2.nome << " de " << carta2.naipe << endl;
-                soma += carta2.valor;
-                if (carta2.valor == 11) {
-                    numdeAses++;
-                }
+                cout << "Segunda carta: " << carta2 << endl;
+                soma += carta2;
+                if (carta2 == 11) {
+                numdeAses++;}
                 if (soma == 22) {
                     soma = 12;
                     numdeAses--;
@@ -114,69 +96,61 @@ int main() {
                 cout << "Sua soma atual e: " << soma << endl;
                 cout << "---------------------------------" << endl;
                 
-                Carta cartadodeeler1 = baralho[indice];
-                cout << " Carta do Deeler: " << cartadodeeler1.nome << " de " << cartadodeeler1.naipe << endl;
+                int cartadodeeler1 = baralho[indice];
+                cout << " Carta do Deeler: " << cartadodeeler1 << endl;
                 indice++;
-                if (cartadodeeler1.valor == 11) {
-                    numdeAsesDeeler++;
-                }
+                if (cartadodeeler1 == 11) {
+                numdeAsesDeeler++;}
                 cout << "---------------------------------" << endl;
                 system("pause");
-                
                 while (true) {
                     cout << "Deseja mais uma carta?" << endl << "(1) Sim (2) Nao): ";
                     int escolha;
                     cin >> escolha;
 
                     if (escolha == 1) {
-                        Carta novacarta = baralho[indice];
+                        int novacarta = baralho[indice];
                         indice++;
-                        cout << "Carta retirada: " << novacarta.nome << " de " << novacarta.naipe << endl;
-                        soma += novacarta.valor;
+                        cout << "Carta retirada: " << novacarta << endl;
+                        soma += novacarta;
                         cout << "Sua soma atual e: " << soma << endl;
-                        
-                        if (novacarta.valor == 11) {
-                            numdeAses++;
-                        }
-                        
-                        // Loop para corrigir ases caso estoure
+                        if (novacarta == 11) {
+                            numdeAses++;}
                         if (soma > 21 && numdeAses > 0) {
                             soma -= 10;
                             numdeAses--;
                             cout << "Voce tinha um A. Ele agora vale 1 ponto. Sua nova soma e: " << soma << endl;
-                            if (soma <= 21) {
-                                estorou = false;
-                            }
                         }
                         system("pause");
-                        
                         if (soma > 21) {
                             cout << "Voce estourou! Sua soma ultrapassou 21. Voce perdeu!" << endl;
                             estorou = true;
                             break;
+                        } else if (soma == 21) {
+                            cout << "Parabens! Voce fez 21! Voce ganhou!" << endl;
+                            break; // Se fez 21, para de pedir carta
                         } 
                     }
-                    else if (escolha == 2) {
+                    
+                    if (escolha == 2) {
                         cout << "Sua soma final e: " << soma << endl;
                         system("pause");
                         cout << "Vez do Deeler." << endl;
                         system("pause");
-                        
                         int somaDeeler = 0;
-                        somaDeeler += cartadodeeler1.valor;
-                        // Nota: O índice já foi incrementado quando mostramos a primeira carta do dealer
+                        somaDeeler += cartadodeeler1;
+                        indice++;
                         cout << "Soma do Deeler: " << somaDeeler << endl;
                         
                         while (somaDeeler < 17) {
                             cout << "Deeler puxa mais uma carta." << endl;
-                            Carta cartadodeeler = baralho[indice];
+                            int cartadodeeler = baralho[indice];
                             indice++;
                             system("pause");
-                            cout << "Carta retirada: " << cartadodeeler.nome << " de " << cartadodeeler.naipe << endl;
-                            somaDeeler += cartadodeeler.valor;
-                            if (cartadodeeler.valor == 11) {
-                                numdeAsesDeeler++;
-                            }
+                            cout << "Carta retirada: " << cartadodeeler << endl;
+                            somaDeeler += cartadodeeler;
+                            if (cartadodeeler == 11) {
+                                numdeAsesDeeler++;}
                             cout << "Soma do Deeler: " << somaDeeler << endl;
                             if (somaDeeler > 21 && numdeAsesDeeler > 0) {
                                 somaDeeler -= 10; 
@@ -185,7 +159,7 @@ int main() {
                             }
                         }
                         
-                        // Verifica quem ganhou
+                        // Verifica quem ganhou depois que o Dealer parou
                         if (somaDeeler > 21) {
                             cout << "Deeler estourou! Voce ganhou!" << endl;
                             estorou = true;
@@ -195,9 +169,10 @@ int main() {
                             cout << "Voce venceu o Deeler! Parabens!" << endl;
                         }
                         system("pause");
-                        break; 
+                        break; // Sai do while(true) de pedir cartas porque o jogo acabou
                     }
                 } 
+                
                 break; 
             } 
             case 2:
@@ -214,7 +189,7 @@ int main() {
 
             case 3:
                 cout << "Obrigado por jogar! Ate a proxima!" << endl;
-                return 0; 
+                return 0; // Encerra o programa
                 
             default:
                 cout << "Opcao invalida! Por favor, escolha 1, 2 ou 3." << endl;
