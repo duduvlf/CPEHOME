@@ -3,9 +3,26 @@
 #include <ctime>  
 #include <algorithm> 
 #include <string>
-
+#include <iomanip>
+#include <fstream>
 using namespace std;
 
+void SalvarSaldo(double saldoAtual) {
+    ofstream arquivo("saldo.txt");
+    if (arquivo.is_open()) {
+        arquivo << saldoAtual;
+        arquivo.close(); 
+    }
+}
+double CarregarSaldo() {
+    ifstream arquivo("saldo.txt");
+    double saldoCarregado = 0.0;
+    if (arquivo.is_open()) {
+        arquivo >> saldoCarregado;
+        arquivo.close();
+    }
+    return saldoCarregado;
+}
 struct Carta {
     string nome;  
     string naipe;  
@@ -33,12 +50,14 @@ void embaralhar(Carta deck[], int tamanho) {
 // CORREÇÃO: Removi as variáveis globais daqui!
 
 int main() { 
+    cout << fixed << setprecision(2);
     srand(time(NULL));
     
     // CORREÇÃO: Movi elas para cá (Variáveis Locais)
     int opcao = 0;
     int indice = 0; 
-    
+    double aposta = 0;
+    double saldo = CarregarSaldo();
     Carta baralho[52];
     
     string naipes[] = {"Ouros", "Espadas", "Copas", "Paus"};
@@ -79,21 +98,49 @@ int main() {
         switch (opcao) {
             
             case 1: { 
-                
                 bool estorou = false;
-                cout << "Iniciando o jogo..." << endl;
+                bool ganhou = false;
+                if (saldo <= 0) {
+                  cout << "=================================" << endl;
+                  cout << "Quanto de saldo deseja adicionar" << endl;
+                  cin >> saldo;
+                  SalvarSaldo(saldo);
+                  system ("pause");
+                  system("cls");
+                } else {
+                 cout << "Iniciando o jogo..." << endl;
+                }
                 int soma = 0;
                 int numdeAses = 0;
                 int numdeAsesDeeler = 0;
-                
                 indice = 0; // Reseta o índice para o começo do baralho
                 
                 Carta carta1 = baralho[indice];
                 indice++;
-                
                 system("pause");
                 system ("cls");
-                cout << "---------------------------------" << endl;
+                
+                while (true){
+                  cout << "---------------------------------" << endl;
+                  cout << " SALDO ATUAL:" << saldo << endl; 
+                  cout << "Qual o valor da sua aposta?"; 
+                  cin >> aposta;
+                   if (aposta > saldo){
+                     cout << "Você não possui essa quantia, coloque um valor de acordo com seu saldo:" << saldo << endl;
+                  } else if (aposta <=0) {
+                     cout << "Aposta Invalida. Digite um valor maior que 0" << endl;
+                  } else { 
+                     cout << "APOSTA ACEITA" << endl;
+                     break;
+                  }
+                }
+                system ("pause");
+                system ("cls");
+                cout << "--------------------------------" << endl;
+                cout << "Aposta Atual:" << aposta << endl;
+                cout << endl; 
+                saldo -= aposta;
+                SalvarSaldo(saldo);
                 cout << "Sua primeira carta: " << carta1.nome << " de " << carta1.naipe << endl;
                 if (carta1.valor == 11) {
                     numdeAses++;
@@ -122,8 +169,15 @@ int main() {
                 }
                 cout << "---------------------------------" << endl;
                 system("pause");
-                
+                if (soma == 21){
+                 cout << "BlackJack!!!" << endl;
+                 ganhou = true;
+                 cout << "--------------------------------" << endl;
+                }
                 while (true) {
+                    if (ganhou){
+                        break;
+                    }
                     cout << "Deseja mais uma carta?" << endl << "(1) Sim (2) Nao): ";
                     int escolha;
                     cin >> escolha;
@@ -152,9 +206,12 @@ int main() {
                         
                         if (soma > 21) {
                             cout << "Voce estourou! Sua soma ultrapassou 21. Voce perdeu!" << endl;
-                            estorou = true;
                             break;
-                        } 
+                        } else if (soma == 21){ 
+                            cout << "21 PONTOS!!" << endl;
+                            ganhou = true;
+                            break;
+                        }
                     }
                     else if (escolha == 2) {
                         cout << "Sua soma final e: " << soma << endl;
@@ -188,17 +245,28 @@ int main() {
                         // Verifica quem ganhou
                         if (somaDeeler > 21) {
                             cout << "Deeler estourou! Voce ganhou!" << endl;
-                            estorou = true;
+                            ganhou = true;
+                            break;
                         } else if (somaDeeler >= soma && somaDeeler <= 21) {
                             cout << "Deeler venceu! Voce perdeu!" << endl;
+                            ganhou = false;
+                            break;
                         } else {
                             cout << "Voce venceu o Deeler! Parabens!" << endl;
+                            ganhou = true;
+                           
+                            break;
                         }
                         system("pause");
                         break; 
                     }
                 } 
+                if (ganhou){
+                   saldo += aposta * 2;
+                   SalvarSaldo(saldo);
+                }
                 break; 
+            
             } 
             case 2:
                 cout << "Regras do Blackjack:" << endl;
